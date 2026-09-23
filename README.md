@@ -5,7 +5,9 @@ Its goal is to track availability, response times, and health check history.
 
 ## Current status
 
-Repository setup only. The API, database, and dashboard are not implemented yet.
+A first FastAPI endpoint is available: `GET /health` returns `{"status":"ok"}`.
+It confirms that the API responds; it does not check a database or other services.
+The database and dashboard are not implemented yet.
 
 ## Planned stack
 
@@ -17,16 +19,40 @@ Repository setup only. The API, database, and dashboard are not implemented yet.
 ## Repository layout
 
 ```text
-backend/     Python API (to be implemented)
+backend/     Python API and dependencies
 frontend/    React dashboard (to be implemented)
-AGENTS.md    Project scope and learning workflow
 ```
 
 ## Local development
 
-Setup and run commands will be added as each component becomes available.
-The first milestone is a FastAPI application with `GET /health`, a local
-PostgreSQL database running through Docker Compose, and a first Service model.
+The backend currently uses Python 3.14. Run these commands from the repository root:
+
+```bash
+python3 -m venv backend/.venv
+source backend/.venv/bin/activate
+python -m pip install -r backend/requirements.txt
+fastapi dev backend/main.py
+```
+
+On Ubuntu, if environment creation fails because `ensurepip` is missing,
+install the venv package matching your Python version (for example,
+`sudo apt install python3.14-venv`) and retry.
+
+In a second terminal:
+
+```bash
+curl -i http://127.0.0.1:8000/health
+```
+
+Expected response: HTTP `200 OK` with the JSON body `{"status":"ok"}`.
+Interactive API documentation is available at <http://127.0.0.1:8000/docs>.
+Stop the server with `Ctrl+C`.
+
+The virtual environment is created once. Activate it again in each new terminal
+used to run the backend. Dependencies are pinned in `backend/requirements.txt`
+from the current Linux development environment.
+
+Next milestone: PostgreSQL through Docker Compose and a first Service model.
 
 ## Development workflow
 
